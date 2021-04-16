@@ -78,6 +78,40 @@ public class Client {
             if(!str.equals(DOT)&&!str.contains(DATA)){
                 Servers.add(str);
             }
+        } 
+       ServerInfo = Separate(Servers);
+       LargestServer = getLargest(ServerInfo);
+
+        pw.println(OK);
+        pw.flush();
+
+        str = Job;
+        System.out.println(str);
+        while(!str.contains(NONE)){
+            if(str.contains(JCPL)){
+                pw.println(REDY);
+                pw.flush();
+            }
+            else if(str.equals(OK)||str.contains(JCPL)){
+                pw.println(REDY);
+                pw.flush();
+            }
+            else if(str.contains(JOBN)){
+                JobID = CurJobID(str);
+                pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
+                pw.flush();
+            }
+            else if(str.contains(JOBP)){
+                JobID = CurJobID(str);
+                pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
+                pw.flush();
+            }
+            if(str.equals(NONE)){
+                pw.flush();
+                break;
+            }
+            str = bf.readLine();
+            pw.flush();
         }
    }
 }
