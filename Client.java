@@ -33,6 +33,31 @@ public class Client {
         }
         return ServerInfo;
     }
+    
+     public static Storage getLargest(ArrayList<Storage> ServerInfo){
+        Storage curLargest = new Storage();
+        for(int i = 0;i<ServerInfo.size();i++){
+            Storage cur = ServerInfo.get(i);
+            for(int j = i;j<ServerInfo.size();j++){
+                Storage cur2 = ServerInfo.get(j);
+                if(cur2.core > cur.core){
+                    curLargest = cur2;
+                    break;
+                }
+            }
+        }
+        return curLargest;
+    }
+
+    public static String CurJobID(String s){
+        String [] JobInfo;
+        String JobID;
+        JobInfo = s.split("\\s+");
+        JobID = JobInfo[2];
+        System.out.println(JobID);
+        return JobID;
+    }
+    
    public static void main(String[] args) throws IOException, SocketException{
         
         Socket s = new Socket("LocalHost", 50000);
