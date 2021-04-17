@@ -48,6 +48,12 @@ public class Client {
         }
         return curLargest;
     }
+    
+    public static void allToLargest(Storage LargestServer, String JobID, PrintWriter pw){
+        pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
+        pw.flush();
+    }
+    
 
     public static String CurJobID(String s){
         String [] JobInfo;
@@ -123,13 +129,11 @@ public class Client {
             }
             else if(str.contains(JOBN)){
                 JobID = CurJobID(str);
-                pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
-                pw.flush();
+                allToLargest(LargestServer,JobID, pw);
             }
             else if(str.contains(JOBP)){
                 JobID = CurJobID(str);
-                pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
-                pw.flush();
+                allToLargest(LargestServer,JobID, pw);
             }
             if(str.equals(NONE)){
                 pw.flush();
