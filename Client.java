@@ -85,7 +85,7 @@ public class Client {
         str = bf.readLine();
         System.out.println("server : " + str);
 
-        pw.println(AUTH + " bruce") ;
+        pw.println(AUTH + " aidan") ;
         pw.flush();
 
         str = bf.readLine();
