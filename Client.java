@@ -138,5 +138,12 @@ public class Client {
             str = bf.readLine();
             pw.flush();
         }
+        pw.println(QUIT);
+        pw.flush();
+        str = bf.readLine();
+        System.out.println("Server : " + str);
+        in.close();
+        pw.close();
+        s.close();
    }
 }
