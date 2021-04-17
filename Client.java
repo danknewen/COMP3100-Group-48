@@ -17,7 +17,8 @@ public class Client {
     private static String DOT = ".";
     private static String DATA = "DATA";
     private static String ERR = "ERR";
-  
+    private static String name = System.getProperty("user.name");  
+    
     public static ArrayList<Storage> Separate(ArrayList<String> Servers){
         String [] Info;
         ArrayList<Storage> ServerInfo = new ArrayList<Storage>();
@@ -84,8 +85,8 @@ public class Client {
 
         str = bf.readLine();
         System.out.println("server : " + str);
-
-        pw.println(AUTH + " aidan") ;
+       //takes current username and uses it for AUTH
+        pw.println(AUTH + " " + name);
         pw.flush();
 
         str = bf.readLine();
