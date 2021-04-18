@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.*;
 
 public class Client {
+    //Generation of all static strings
     private static String HELO = "HELO";
     private static String AUTH = "AUTH";
     private static String REDY = "REDY";
@@ -19,9 +20,13 @@ public class Client {
     private static String ERR = "ERR";
     private static String name = System.getProperty("user.name");  
     
+    //Method that accepts a list of strings and separates them into smaller segments based on present whitespace and stores data to custom class
     public static ArrayList<Storage> Separate(ArrayList<String> Servers){
         String [] Info;
+        //Temp ArrayList 
         ArrayList<Storage> ServerInfo = new ArrayList<Storage>();
+        //Loop through a string and divide into segments
+        //Store segemnts into temp string array in function
         for (int i = 0; i<Servers.size(); i++){
             Storage cur = new Storage();
             Info = Servers.get(i).split("\\s+");
@@ -35,6 +40,7 @@ public class Client {
         return ServerInfo;
     }
     
+    //Determines largest server based on comparison of cores
      public static Storage getLargest(ArrayList<Storage> ServerInfo){
         Storage curLargest = new Storage();
         for(int i = 0;i<ServerInfo.size();i++){
@@ -50,12 +56,13 @@ public class Client {
         return curLargest;
     }
     
+    //Implementation of a basic allocation to largest server method, improves code readability
     public static void allToLargest(Storage LargestServer, String JobID, PrintWriter pw){
         pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
         pw.flush();
     }
     
-
+    //Accepts string in order to determine job ID as recevied from server
     public static String CurJobID(String s){
         String [] JobInfo;
         String JobID;
@@ -66,10 +73,11 @@ public class Client {
     }
     
    public static void main(String[] args) throws IOException, SocketException{
-        
+        //Connection to specified socket
         Socket s = new Socket("LocalHost", 50000);
         InputStreamReader in = new InputStreamReader(s.getInputStream());
         BufferedReader bf = new BufferedReader(in);
+        //PrintWriter to circumvent byte issue
         PrintWriter pw = new PrintWriter(s.getOutputStream());
         String str = "";
         String Largest = "";
@@ -79,13 +87,13 @@ public class Client {
         ArrayList<Storage> ServerInfo = new ArrayList<Storage>();
         Storage LargestServer = new Storage();
 
-        //.getBytes()+ "\n"
+        //General handshake procedures
         pw.println(HELO);
         pw.flush();
 
         str = bf.readLine();
         System.out.println("server : " + str);
-       //takes current username and uses it for AUTH
+       //takes current system username and uses it for AUTH
         pw.println(AUTH + " " + name);
         pw.flush();
 
@@ -101,7 +109,9 @@ public class Client {
 
         pw.println(GET);
         pw.flush();
-
+        
+       //Loop to read and store all received server information to a string arraylist 
+       //Excepts the ending . and initial DATA message
         while(!str.equals(DOT)){
             str = bf.readLine();
             System.out.println("Server : " + str);
@@ -111,15 +121,19 @@ public class Client {
                 Servers.add(str);
             }
         } 
+       //Calls upon Separate method to separate server data into readable information
        ServerInfo = Separate(Servers);
+       //Determines largest server based on server information
        LargestServer = getLargest(ServerInfo);
 
         pw.println(OK);
         pw.flush();
 
+       //Switches current read point to previously send Job
         str = Job;
         System.out.println(str);
         while(!str.contains(NONE)){
+            //Conditions for server messages
             if(str.contains(JCPL)){
                 pw.println(REDY);
                 pw.flush();
@@ -143,10 +157,12 @@ public class Client {
             str = bf.readLine();
             pw.flush();
         }
+       //Quit procedures
         pw.println(QUIT);
         pw.flush();
         str = bf.readLine();
         System.out.println("Server : " + str);
+       //Closing of all connections
         in.close();
         pw.close();
         s.close();
