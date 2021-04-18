@@ -17,7 +17,7 @@ public class Client {
     private static String DOT = ".";
     private static String DATA = "DATA";
     private static String ERR = "ERR";
-    private static String name = System.getProperty("user.name");  
+    private static String name = System.getProperty("user.name");
     
     public static ArrayList<Storage> Separate(ArrayList<String> Servers){
         String [] Info;
@@ -50,9 +50,9 @@ public class Client {
         return curLargest;
     }
     
+    //edit in a sec
     public static void allToLargest(Storage LargestServer, String JobID, PrintWriter pw){
-        pw.println(SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
-        pw.flush();
+        write(pw, SCHD + " " + JobID + " " + LargestServer.ID + " " + LargestServer.type);
     }
     
 
@@ -64,13 +64,19 @@ public class Client {
         System.out.println(JobID);
         return JobID;
     }
+
+    //writes the parameter String s to output socket using a PrintWriter pw
+    public static void write(PrintWriter pw, String s) {
+        pw.println(s);
+        pw.flush();
+    }
     
    public static void main(String[] args) throws IOException, SocketException{
         
         Socket s = new Socket("LocalHost", 50000);
         InputStreamReader in = new InputStreamReader(s.getInputStream());
         BufferedReader bf = new BufferedReader(in);
-        PrintWriter pw = new PrintWriter(s.getOutputStream());
+        PrintWriter pw = new PrintWriter(s.getOutputStream());  //instantiates and connects a PrintWriter pw to the Socket s's output stream
         String str = "";
         String Largest = "";
         String Job = "";
@@ -80,33 +86,28 @@ public class Client {
         Storage LargestServer = new Storage();
 
         //.getBytes()+ "\n"
-        pw.println(HELO);
-        pw.flush();
+        write(pw, HELO);
 
         str = bf.readLine();
         System.out.println("server : " + str);
        //takes current username and uses it for AUTH
-        pw.println(AUTH + " " + name);
-        pw.flush();
+        write(pw, AUTH + " " + name);
 
         str = bf.readLine();
         System.out.println("server : " + str);
 
-        pw.println(REDY);
-        pw.flush();
+        write(pw, REDY);
 
         str = bf.readLine();
         Job = str;
         System.out.println("server : " + str);
 
-        pw.println(GET);
-        pw.flush();
+        write(pw, GET);
 
         while(!str.equals(DOT)){
             str = bf.readLine();
             System.out.println("Server : " + str);
-            pw.println(OK);
-            pw.flush();
+            write(pw, OK);
             if(!str.equals(DOT)&&!str.contains(DATA)){
                 Servers.add(str);
             }
@@ -114,19 +115,16 @@ public class Client {
        ServerInfo = Separate(Servers);
        LargestServer = getLargest(ServerInfo);
 
-        pw.println(OK);
-        pw.flush();
+       write(pw, OK);
 
         str = Job;
         System.out.println(str);
         while(!str.contains(NONE)){
             if(str.contains(JCPL)){
-                pw.println(REDY);
-                pw.flush();
+                write(pw, REDY);
             }
             else if(str.equals(OK)||str.contains(JCPL)){
-                pw.println(REDY);
-                pw.flush();
+                write(pw, REDY);
             }
             else if(str.contains(JOBN)){
                 JobID = CurJobID(str);
@@ -143,8 +141,7 @@ public class Client {
             str = bf.readLine();
             pw.flush();
         }
-        pw.println(QUIT);
-        pw.flush();
+        write(pw, QUIT);
         str = bf.readLine();
         System.out.println("Server : " + str);
         in.close();
