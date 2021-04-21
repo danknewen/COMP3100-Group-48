@@ -43,6 +43,9 @@ public class Client {
     //Determines largest server based on comparison of cores
      public static Storage getLargest(ArrayList<Storage> ServerInfo){
         Storage curLargest = new Storage();
+        if(ServerInfo.size() == 1){
+            curLargest = ServerInfo.get(0);
+        }
         for(int i = 0;i<ServerInfo.size();i++){
             Storage cur = ServerInfo.get(i);
             for(int j = i;j<ServerInfo.size();j++){
