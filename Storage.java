@@ -1,23 +1,30 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Storage{
-    public String ID;
-    public int type;
+    public int ID;
+    public String type;
     public String Status;
     public int BootupTime;
     public int core;
     public int memory;
     public int disk;
-    public int wJobs;
-    public int rJobs;
+    public int waitingJobs;
+    public int runningJobs;
+    public float avgWait;
 
-    public Storage(){
-        ID = "";
-        type = 0;
-        Status = "";
-        BootupTime = 0;
-        core = 0;
-        memory = 0;
-        disk = 0;
-        wJobs = 0;
-        rJobs = 0;
+    public Storage(String s){
+        String[] Info = s.split(" ");
+        ID = Integer.parseInt(Info[1]);
+        type = Info[0];
+        Status = Info[2];
+        BootupTime = Integer.parseInt(Info[3]);
+        core = Integer.parseInt(Info[4]);
+        memory = Integer.parseInt(Info[5]);
+        disk = Integer.parseInt(Info[6]);
+        waitingJobs = Integer.parseInt(Info[7]);
+        runningJobs = Integer.parseInt(Info[8]);
+        avgWait = 0;
     }
+
 }
